@@ -15,7 +15,7 @@ public class ChessController implements ActionListener {
 
 	private Vector<Piece> piecesBlanche;
 	private Vector<Piece> piecesNoir;
-	private Piece activePiece;
+	private Piece activePiece = null;
 	private boolean myTurn = true;
 	private int turnCount = 0;
 
@@ -32,15 +32,20 @@ public class ChessController implements ActionListener {
 		int clickedLigne = click.getY() / click.getSize().height;
 		int clickedCol = click.getX() / click.getSize().width;
 		
-		if(!isExist(clickedCol, clickedLigne) && activePiece == null) {
+		if(activePiece == null && !clickOnWhite(clickedCol, clickedLigne)) {
 			return;
 		}
-			
+		
 		if (!myTurn) {
+			boolean possiblePiece = activePiece.isPossible(clickedCol, clickedLigne, piecesBlanche, piecesNoir);
 			int position = piecesBlanche.indexOf(activePiece);
-			piecesBlanche.get(position).setXY(clickedCol, clickedLigne, activePiece);
-			activePiece = null;
+			System.out.println("Is Possible : " + possiblePiece);
+			if(possiblePiece) {
+				piecesBlanche.get(position).setXY(clickedCol, clickedLigne, activePiece);				
+			}
+			piecesBlanche.get(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
 			myTurn = true;
+			activePiece = null;
 		} else {
 			click.setBackground(new Color(0xf6f669));
 			activePiece = piecesBlanche.stream()
@@ -51,9 +56,9 @@ public class ChessController implements ActionListener {
 		System.out.println(activePiece);
 	}
 	
-	private boolean isExist(int x, int y) {
+	private boolean clickOnWhite(int x, int y) {
 		for(Piece p : piecesBlanche) {
-			if(p.getX() == x && p.getY() == y) return true;
+			if(p.isBlanche() && p.getX() == x && p.getY() == y) return true;
 		}
 		return false;
 	}

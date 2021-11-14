@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Vector;
+
 public class Queen extends Piece {
 
 	public Queen(int x, int y, boolean blanche, String icon) {
@@ -8,7 +10,7 @@ public class Queen extends Piece {
 	}
 	
 	@Override
-	public boolean deplacer(int x_dest, int y_dest) {
+	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
 		// TODO Auto-generated method stub
 		return true;
 	}

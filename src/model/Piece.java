@@ -75,7 +75,7 @@ public class Piece {
 		notifieur.addChessEventListener(listener);
 	}
 	
-	public boolean deplacer(int x_dest, int y_dest) {
+	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
 		return false;
 	}
 
@@ -83,6 +83,5 @@ public class Piece {
 	public String toString() {
 		return "Piece [x=" + x + ", y=" + y + ", blanche=" + blanche + "]";
 	}
-	
 	
 }

@@ -76,7 +76,7 @@ public class Table extends JPanel implements ChessEventListener {
 		piecesNoir.add(new Rook(7, 0, false, "rook_black.png"));
 
 		for (int i = 0; i < COLONNES; i++) {
-			piecesBlanche.add(new Piece(i, 1, false, "pawn_black.png"));
+			piecesNoir.add(new Piece(i, 1, false, "pawn_black.png"));
 		}
 
 		for (int i = 0; i < LIGNES; i++) {
