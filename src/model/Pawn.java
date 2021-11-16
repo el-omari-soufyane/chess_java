@@ -19,7 +19,6 @@ public class Pawn extends Piece {
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
 			if(!possiblePiece.isBlanche() && !this.isBlanche()) return false;
-			if(!possiblePiece.isBlanche() && y_dest == getY()-1 && x_dest == getX()) return false;
 			if(!possiblePiece.isBlanche() && y_dest == getY()-1 && (x_dest == getX()-1 || x_dest == getX()+1)) return true;
 		}
 		
