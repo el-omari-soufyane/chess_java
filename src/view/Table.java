@@ -48,7 +48,6 @@ public class Table extends JPanel implements ChessEventListener {
 		initTable();
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setMaximumSize(new Dimension(WIDTH, HEIGHT));
-		setMaximumSize(new Dimension(WIDTH, HEIGHT));
 	}
 
 	private void initTable() {

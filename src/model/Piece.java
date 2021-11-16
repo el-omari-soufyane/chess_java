@@ -78,6 +78,13 @@ public class Piece {
 	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
 		return false;
 	}
+	
+	public boolean isBlocking(int x, int y, Vector<Piece> blanche) {
+		for(Piece p : blanche) {
+			if(p.getX() == x && p.getY() == y) return true;
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {
