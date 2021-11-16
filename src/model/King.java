@@ -6,15 +6,12 @@ public class King extends Piece {
 
 	public King(int x, int y, boolean blanche, String icon) {
 		super(x, y, blanche, icon);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
-		// TODO Auto-generated method stub
 		System.out.println("Dest => x : " + x_dest + " y : " + y_dest + " => OldPiece : " + this);
 		Piece possiblePiece = blanche.stream().filter(p -> p.getX() == x_dest && p.getY() == y_dest).findFirst().orElse(null);
-		//possiblePiece = noir.stream().filter(p -> p.getX() == x_dest && p.getY() == y_dest).findFirst().orElse(possiblePiece);
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
