@@ -28,16 +28,16 @@ public class Queen extends Piece {
 			
 			for(int i=1; i < nbPas; i++) {
 				if(y_dest < getY()) {
-					isBlocking = isBlocking(getX(), getY()-i, blanche);
+					isBlocking = isBlocking(getX(), getY()-i, blanche, noir);
 					if(!isBlocking && getY()-i == y_dest) break;
 				} else if(y_dest > getY()) {
-					isBlocking = isBlocking(getX(), getY()+i, blanche);
+					isBlocking = isBlocking(getX(), getY()+i, blanche, noir);
 					if(!isBlocking && getY()+i == y_dest) break;
 				} else if(x_dest > getX()) {
-					isBlocking = isBlocking(getX()+i, getY(), blanche);
+					isBlocking = isBlocking(getX()+i, getY(), blanche, noir);
 					if(!isBlocking && getX()+i == x_dest) break;
 				} else if(x_dest < getX()) {
-					isBlocking = isBlocking(getX()-i, getY(), blanche);
+					isBlocking = isBlocking(getX()-i, getY(), blanche, noir);
 					if(!isBlocking && getX()-i == x_dest) break;
 				}
 				System.out.println("is Blocking : " + isBlocking + " - Like rook");
@@ -52,16 +52,16 @@ public class Queen extends Piece {
 				boolean isBlocking = true;
 				for(int i=1; i<nbPasX; i++) {
 					if(y_dest < getY() && x_dest < getX()) {
-						isBlocking = isBlocking(getX()-i, getY()-i, blanche);
+						isBlocking = isBlocking(getX()-i, getY()-i, blanche, noir);
 						if(isBlocking) return false;
 					} else if(y_dest < getY() && x_dest > getX()) {
-						isBlocking = isBlocking(getX()+i, getY()-i, blanche);
+						isBlocking = isBlocking(getX()+i, getY()-i, blanche, noir);
 						if(isBlocking) return false;
 					} else if(y_dest > getY() && x_dest < getX()) {
-						isBlocking = isBlocking(getX()-i, getY()+i, blanche);
+						isBlocking = isBlocking(getX()-i, getY()+i, blanche, noir);
 						if(isBlocking) return false;
 					} else if(y_dest > getY() && x_dest > getX()) {
-						isBlocking = isBlocking(getX()+i, getY()+i, blanche);
+						isBlocking = isBlocking(getX()+i, getY()+i, blanche, noir);
 						if(isBlocking) return false;
 					}
 				}

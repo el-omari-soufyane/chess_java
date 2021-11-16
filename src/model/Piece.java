@@ -79,8 +79,11 @@ public class Piece {
 		return false;
 	}
 	
-	public boolean isBlocking(int x, int y, Vector<Piece> blanche) {
+	public boolean isBlocking(int x, int y, Vector<Piece> blanche, Vector<Piece> noir) {
 		for(Piece p : blanche) {
+			if(p.getX() == x && p.getY() == y) return true;
+		}
+		for(Piece p : noir) {
 			if(p.getX() == x && p.getY() == y) return true;
 		}
 		return false;

@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,9 +27,6 @@ public class ChessGUI extends JFrame {
 	private JPanel headerPanel = new JPanel();
 	private final JLabel headerMessage = new JLabel("Bienvenue sur i-Chess !");
 	
-	private Button start = new Button("Nouvelle partie", "icons/add.png", new Color(0x26b1aa));
-	private Button upload = new Button("Continuer une partie", "/icons/upload-file.png", new Color(0xd67c54));
-	private Button quit = new Button("Quitter", "icons/close.png", new Color(0xff605c));
 	
 	private Table tableChess = new Table();
 
@@ -38,10 +37,10 @@ public class ChessGUI extends JFrame {
 	private JLabel timerBlanche = new JLabel("00:00");
 	private JLabel timerNoir = new JLabel("00:00");
 
-	private Button saveJeu = new Button("Enregistrer", "icons/save.png", new Color(0xff605c));
+	private Button saveJeu = new Button("Enregistrer", "icons/save.png", new Color(0xd47b53));
+	private Button quit = new Button("Quitter", "icons/close.png", new Color(0xff605c));
 
 	public ChessGUI() {
-		System.out.println("Is Opened");
 		// TODO Auto-generated constructor stub
 		setLayout(new BorderLayout(15, 25));
 		
@@ -52,20 +51,9 @@ public class ChessGUI extends JFrame {
 		headerMessage.setForeground(new Color(50,111,138));
 		headerMessage.setFont(new Font("Evil Empire", Font.PLAIN, 24));
         
-        start.setMargin(new Insets(10, 10, 10, 10));
-        start.setFocusPainted(false);
-        start.setFont(new Font("Glue Gun", Font.PLAIN, 16));
-        
-        upload.setMargin(new Insets(10, 10, 10, 10));
-        upload.setFocusPainted(false);
-        upload.setFont(new Font("Glue Gun", Font.PLAIN, 16));
-        
-        quit.setMargin(new Insets(10, 10, 10, 10));
-        quit.setFocusPainted(false);
-        quit.setFont(new Font("Glue Gun", Font.PLAIN, 16));
-        
         headerPanel.setLayout(new FlowLayout());
-        headerPanel.add(start); headerPanel.add(upload); headerPanel.add(quit);
+        headerPanel.add(saveJeu);
+        headerPanel.add(quit);
         
         toolbar.add(headerMessage, BorderLayout.WEST);
         toolbar.add(headerPanel, BorderLayout.EAST);
@@ -86,7 +74,6 @@ public class ChessGUI extends JFrame {
 
 		rightPanel.setLayout(new BorderLayout());
 		rightPanel.add(timerPanel, BorderLayout.NORTH);
-		rightPanel.add(saveJeu, BorderLayout.SOUTH);
 
 		tableChess.setSize(tableChess.getPreferredSize());
 
