@@ -16,7 +16,7 @@ public class Button extends JButton {
 	public Button(String label, String icon, Color bgColor) {
 		// TODO Auto-generated constructor stub
 		setText(label);
-		Image iconButton = new ImageIcon("images/" + icon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
+		Image iconButton = new ImageIcon("images/" + icon).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		setIcon(new ImageIcon(iconButton));
 		
         setIcon(new ImageIcon(iconButton));

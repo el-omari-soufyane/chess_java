@@ -95,7 +95,7 @@ public class Table extends JPanel implements ChessEventListener {
 			int col = piecesBlanche.get(i).getX();
 			int row = piecesBlanche.get(i).getY();
 			Image icon = new ImageIcon("images/" + piecesBlanche.get(i).getIcon()).getImage().getScaledInstance(60, 60,
-					Image.SCALE_DEFAULT);
+					Image.SCALE_SMOOTH);
 			ImageIcon piece = new ImageIcon(icon);
 			carres[row][col].setIcon(piece);
 			piecesBlanche.get(i).addChessEventListener(this);
@@ -105,7 +105,7 @@ public class Table extends JPanel implements ChessEventListener {
 			int col = piecesNoir.get(i).getX();
 			int row = piecesNoir.get(i).getY();
 			Image icon = new ImageIcon("images/" + piecesNoir.get(i).getIcon()).getImage().getScaledInstance(60, 60,
-					Image.SCALE_DEFAULT);
+					Image.SCALE_SMOOTH);
 			ImageIcon piece = new ImageIcon(icon);
 			carres[row][col].setIcon(piece);
 			piecesNoir.get(i).addChessEventListener(this);
@@ -128,11 +128,11 @@ public class Table extends JPanel implements ChessEventListener {
 			if(newPiece.isBlanche()) {
 				int index = piecesBlanche.indexOf(newPiece);				
 				icon = new ImageIcon("images/" + piecesBlanche.get(index).getIcon()).getImage().getScaledInstance(60, 60,
-						Image.SCALE_DEFAULT);
+						Image.SCALE_SMOOTH);
 			} else {
 				int index = piecesNoir.indexOf(newPiece);				
 				icon = new ImageIcon("images/" + piecesNoir.get(index).getIcon()).getImage().getScaledInstance(60, 60,
-						Image.SCALE_DEFAULT);
+						Image.SCALE_SMOOTH);
 			}
 			
 			ImageIcon deplaceIcon = new ImageIcon(icon);						

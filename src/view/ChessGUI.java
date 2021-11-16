@@ -41,6 +41,7 @@ public class ChessGUI extends JFrame {
 	private Button saveJeu = new Button("Enregistrer", "icons/save.png", new Color(0xff605c));
 
 	public ChessGUI() {
+		System.out.println("Is Opened");
 		// TODO Auto-generated constructor stub
 		setLayout(new BorderLayout(15, 25));
 		
