@@ -18,6 +18,7 @@ public class King extends Piece {
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
+			if(!possiblePiece.isBlanche() && !this.isBlanche()) return false;
 		}
 		
 		if( x_dest > getX()+1 || x_dest < getX()-1) return false;
