@@ -85,5 +85,6 @@ public class ChessGUI extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(900, 800);
+		setResizable(false);
 	}
 }
