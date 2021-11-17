@@ -27,7 +27,6 @@ public class ChessGUI extends JFrame {
 	private JPanel headerPanel = new JPanel();
 	private final JLabel headerMessage = new JLabel("Bienvenue sur i-Chess !");
 	
-	
 	private Table tableChess = new Table();
 
 	private JPanel rightPanel = new JPanel();
@@ -86,5 +85,6 @@ public class ChessGUI extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(900, 800);
 		setResizable(false);
+		setLocationRelativeTo(null);
 	}
 }

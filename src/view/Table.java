@@ -68,6 +68,7 @@ public class Table extends JPanel implements ChessEventListener {
 				}
 				add(carres[i][j]);
 				carres[i][j].addActionListener(chessController);
+				carres[i][j].setFocusPainted(false);
 			}
 		}
 		initPieces();
