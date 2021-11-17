@@ -12,16 +12,17 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 
+import model.ListPieces;
 import model.Piece;
 
 public class ChessController implements ActionListener {
 
-	private Vector<Piece> piecesBlanche;
-	private Vector<Piece> piecesNoir;
+	private ListPieces piecesBlanche;
+	private ListPieces piecesNoir;
 	private Piece activePiece = null;
 	private boolean myTurn = true;
 
-	public ChessController(Vector<Piece> piecesBlanche, Vector<Piece> piecesNoir) {
+	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir) {
 		// TODO Auto-generated constructor stub
 		this.piecesBlanche = piecesBlanche;
 		this.piecesNoir = piecesNoir;
@@ -43,25 +44,21 @@ public class ChessController implements ActionListener {
 			int position = piecesBlanche.indexOf(activePiece);
 			System.out.println("Is Possible : " + possiblePiece);
 			if(possiblePiece) {
-				piecesBlanche.get(position).setXY(clickedCol, clickedLigne, activePiece);
-				for(Piece p : piecesNoir) {
-					if(p.getX() == clickedCol && p.getY() == clickedLigne) {
-						piecesNoir.removeElement(p);
-						break;
-					}
+				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
+				Piece p = piecesNoir.getPieceByXY(clickedCol, clickedLigne);
+				if(p != null) {
+					piecesNoir.removePiece(p);
+					System.out.println(p + " IS REMOVED");
 				}
 			}
-			else piecesBlanche.get(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
+			else piecesBlanche.getPiece(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
 			myTurn = true;
 			activePiece = null;
 		} else {
 			click.setBackground(new Color(0xf6f669));
-			activePiece = piecesBlanche.stream()
-					.filter(p -> p.getX() == clickedCol && p.getY() == clickedLigne)
-					.findFirst().orElse(null);
+			activePiece = piecesBlanche.getPieceByXY(clickedCol, clickedLigne);
 			myTurn = false;
 		}
-		System.out.println(activePiece);
 	}
 	
 	public void executeOpponent() {
@@ -81,10 +78,7 @@ public class ChessController implements ActionListener {
 				System.out.println("Random Piece : X = " + randX + " | Y = " + randY);
 				continue;
 			}			
-			Piece active = null;
-			for(Piece p : piecesNoir) {
-				if(p.getX() == randX && p.getY() == randY) active = p;
-			}
+			Piece active = piecesNoir.getPieceByXY(randX, randY);
 			int position = piecesNoir.indexOf(active);
 			randX_dest = rand.nextInt(8);
 			randY_dest = rand.nextInt(7);
@@ -93,21 +87,19 @@ public class ChessController implements ActionListener {
 				continue;
 			}
 			legalMove = true;			
-			piecesNoir.get(position).setXY(randX_dest, randY_dest, active);	
+			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);	
 		}
 	}
 	
 	private boolean clickOnWhite(int x, int y) {
-		for(Piece p : piecesBlanche) {
-			if(p.isBlanche() && p.getX() == x && p.getY() == y) return true;
-		}
+		if(piecesBlanche.getPieceByXY(x, y) != null)
+			return true;
 		return false;
 	}
 	
 	private boolean clickOnNoir(int x, int y) {
-		for(Piece p : piecesNoir) {
-			if(!p.isBlanche() && p.getX() == x && p.getY() == y) return true;
-		}
+		if(piecesNoir.getPieceByXY(x, y) != null)
+			return true;
 		return false;
 	}
 

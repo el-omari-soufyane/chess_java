@@ -9,10 +9,10 @@ public class Bishop extends Piece {
 	}
 	
 	@Override
-	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
+	public boolean isPossible(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
 		int cpt = 0;
 		System.out.println("Dest => x : " + x_dest + " y : " + y_dest + " => OldPiece : " + this);
-		Piece possiblePiece = blanche.stream().filter(p -> p.getX() == x_dest && p.getY() == y_dest).findFirst().orElse(null);
+		Piece possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
@@ -33,7 +33,7 @@ public class Bishop extends Piece {
 
 				if(x_dest == getX()+i && ( y_dest == getY()-i || y_dest == getY()+i )) {
 					for(int j=1;j<i;j++) {
-						if(isBlocking(getX()+j, getY()-j, blanche)) {
+						if(isBlocking(getX()+j, getY()-j, blanche, noir)) {
 							return false;
 						}
 					}
@@ -42,7 +42,7 @@ public class Bishop extends Piece {
 
 				if(x_dest == getX()-i && y_dest == getY()-i) {
 					for(int j=1;j<i;j++) {
-						if(isBlocking(getX()-j, getY()-j, blanche) ) {
+						if(isBlocking(getX()-j, getY()-j, blanche, noir) ) {
 							return false;
 						}
 					}
@@ -51,7 +51,7 @@ public class Bishop extends Piece {
 
 				if(x_dest == getX()+i && y_dest == getY()+i) {
 					for(int j=1;j<i;j++) {
-						if(isBlocking(getX()+j, getY()+j, blanche) ) {
+						if(isBlocking(getX()+j, getY()+j, blanche, noir) ) {
 							return false;
 						}
 					}
@@ -60,7 +60,7 @@ public class Bishop extends Piece {
 
 				if(x_dest == getX()-i && y_dest == getY()+i) {
 					for(int j=1;j<i;j++) {
-						if(isBlocking(getX()-j, getY()+j, blanche) ) {
+						if(isBlocking(getX()-j, getY()+j, blanche, noir) ) {
 							return false;
 						}
 					}

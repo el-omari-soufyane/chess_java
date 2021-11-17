@@ -75,17 +75,13 @@ public class Piece {
 		notifieur.addChessEventListener(listener);
 	}
 	
-	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
+	public boolean isPossible(int x_dest, int y_dest, ListPieces piecesBlanche, ListPieces piecesNoir) {
 		return false;
 	}
 	
-	public boolean isBlocking(int x, int y, Vector<Piece> blanche, Vector<Piece> noir) {
-		for(Piece p : blanche) {
-			if(p.getX() == x && p.getY() == y) return true;
-		}
-		for(Piece p : noir) {
-			if(p.getX() == x && p.getY() == y) return true;
-		}
+	public boolean isBlocking(int x, int y, ListPieces listBlanche, ListPieces listNoir) {
+		if(listBlanche.getPieceByXY(x, y) != null) return true;
+		if(listNoir.getPieceByXY(x, y) != null) return true;
 		return false;
 	}
 

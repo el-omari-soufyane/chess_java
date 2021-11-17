@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Vector;
-
 public class Knight extends Piece {
 
 	public Knight(int x, int y, boolean blanche, String icon) {
@@ -9,10 +7,10 @@ public class Knight extends Piece {
 	}
 	
 	@Override
-	public boolean isPossible(int x_dest, int y_dest, Vector<Piece> blanche, Vector<Piece> noir) {
+	public boolean isPossible(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
 		int x, y, x1, x2, x3, x4, y1, y2, y3, y4;
 		System.out.println("Dest => x : " + x_dest + " y : " + y_dest + " => OldPiece : " + this);
-		Piece possiblePiece = blanche.stream().filter(p -> p.getX() == x_dest && p.getY() == y_dest).findFirst().orElse(null);
+		Piece possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
