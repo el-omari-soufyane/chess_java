@@ -79,6 +79,11 @@ public class Piece {
 		return false;
 	}
 	
+	public ArrayList<Integer> colorCase(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		return numbers;
+	}
+	
 	public boolean isBlocking(int x, int y, ListPieces listBlanche, ListPieces listNoir) {
 		if(listBlanche.getPieceByXY(x, y) != null) return true;
 		if(listNoir.getPieceByXY(x, y) != null) return true;
