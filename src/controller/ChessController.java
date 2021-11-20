@@ -3,12 +3,9 @@ package controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
+
 
 import javax.swing.JButton;
 
@@ -19,21 +16,23 @@ public class ChessController implements ActionListener {
 
 	private ListPieces piecesBlanche;
 	private ListPieces piecesNoir;
+	private JButton carres[][];
 	private Piece activePiece = null;
 	private boolean myTurn = true;
 
-	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir) {
+	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir, JButton carres[][]) {
 		// TODO Auto-generated constructor stub
 		this.piecesBlanche = piecesBlanche;
 		this.piecesNoir = piecesNoir;
+		this.carres = carres;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		JButton click = (JButton) e.getSource();
-		int clickedCol = click.getX() / click.getSize().width;
 		int clickedLigne = click.getY() / click.getSize().height;
+		int clickedCol = click.getX() / click.getSize().width;
 		
 		if(activePiece == null && !clickOnWhite(clickedCol, clickedLigne)) {
 			return;
@@ -41,30 +40,37 @@ public class ChessController implements ActionListener {
 		
 		if (!myTurn) {
 			boolean possiblePiece = activePiece.isPossible(clickedCol, clickedLigne, piecesBlanche, piecesNoir);
-			int position = piecesBlanche.indexOfPiece(activePiece);
-			System.out.println("Is Possible : " + possiblePiece);
-			System.out.println("Active Piece : " + activePiece);
-			
+			int position = piecesBlanche.indexOf(activePiece);
 			if(possiblePiece) {
 				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
 				Piece p = piecesNoir.getPieceByXY(clickedCol, clickedLigne);
 				if(p != null) {
 					piecesNoir.removePiece(p);
-					System.out.println(p + " IS REMOVED");
 				}
 			}
 			else piecesBlanche.getPiece(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
 			myTurn = true;
 			activePiece = null;
 		} else {
+			ArrayList<Integer> Tab;
 			click.setBackground(new Color(0xf6f669));
 			activePiece = piecesBlanche.getPieceByXY(clickedCol, clickedLigne);
+			Tab = activePiece.colorCase(clickedCol, clickedLigne, piecesBlanche, piecesNoir);
+			int j = 1;
+			for(int i = 0; i < Tab.size(); i = i + 2) {
+				   try {
+					   carres[Tab.get(j)][Tab.get(i)].setBackground(new Color(0xf6f669));
+			       }catch(Exception e1) {
+					  
+			       }
+				   j = j + 2;
+			}
 			myTurn = false;
+			
 		}
 	}
 	
 	public void executeOpponent() {
-		System.out.println("Execute Opponent");
 		Random rand = new Random();
 		int randX = -1;
 		int randY = -1;
@@ -76,20 +82,24 @@ public class ChessController implements ActionListener {
 		while(!legalMove) {
 			randX = rand.nextInt(8);
 			randY = rand.nextInt(7);
+			
 			if(!clickOnNoir(randX, randY)) {
-				System.out.println("Random Piece : X = " + randX + " | Y = " + randY);
 				continue;
 			}			
+			
 			Piece active = piecesNoir.getPieceByXY(randX, randY);
-			int position = piecesNoir.indexOfPiece(active);
+			int position = piecesNoir.indexOf(active);
+			
 			randX_dest = rand.nextInt(8);
 			randY_dest = rand.nextInt(7);
+			
 			if(!active.isPossible(randX_dest, randY_dest, piecesBlanche, piecesNoir)) {
-				System.out.println(active + "Random Destination : X = " + randX_dest + " | Y = " + randY_dest);
 				continue;
 			}
+			
 			legalMove = true;			
 			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);	
+		
 		}
 	}
 	
