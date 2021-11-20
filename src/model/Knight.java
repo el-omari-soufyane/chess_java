@@ -2,16 +2,17 @@ package model;
 
 import java.util.ArrayList;
 
-public class Rook extends Piece {
+public class Knight extends Piece {
 
-	public Rook(int x, int y, boolean blanche, String icon) {
+	public Knight(int x, int y, boolean blanche, String icon) {
 		super(x, y, blanche, icon);
-		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
 	public boolean isPossible(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
-		
+		int x, y, x1, x2, x3, x4, y1, y2, y3, y4;
+
+		//sdckjusigcgdsvgdf_vsei@ghqdg. ocm
 		Piece possiblePiece;
 		possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
 		if(possiblePiece != null) {
@@ -23,26 +24,16 @@ public class Rook extends Piece {
 			if(!possiblePiece.isBlanche() && !this.isBlanche()) return false;
 		}
 		
-		if(y_dest != getY() && x_dest != getX()) return false;
 		
-		boolean isBlocking = true;
-		int nbPas = y_dest != getY() ? Math.abs(y_dest - getY()) : Math.abs(x_dest - getX());
-		for(int i=1; i < nbPas; i++) {
-			if(y_dest < getY()) {
-				isBlocking = isBlocking(getX(), getY()-i, blanche, noir);
-				if(!isBlocking && getY()-i == y_dest) break;
-			} else if(y_dest > getY()) {
-				isBlocking = isBlocking(getX(), getY()+i, blanche, noir);
-				if(!isBlocking && getY()+i == y_dest) break;
-			} else if(x_dest > getX()) {
-				isBlocking = isBlocking(getX()+i, getY(), blanche, noir);
-				if(!isBlocking && getX()+i == x_dest) break;
-			} else if(x_dest < getX()) {
-				isBlocking = isBlocking(getX()-i, getY(), blanche, noir);
-				if(!isBlocking && getX()-i == x_dest) break;
-			}
-			if(isBlocking) return false;
+		x = x_dest; y = y_dest;
+		x1 = getX() + 1; x2 = getX() + 2 ; x3 = getX() - 1; x4 = getX() - 2;
+		y1 = getY() + 1 ; y2 = getY() + 2 ; y3 = getY() - 1; y4 = getY() - 2;
+		
+		if((x != x1 || y != y4) && (x != x2 || y != y3 ) && (x != x2 || y != y1) && (x != x1 || y != y2) && 
+				(x != x3 || y != y4) && (x != x4 || y != y3 ) && (x != x4 || y != y1) && (x != x3 || y != y2)) {
+				return false;
 		}
+		
 		return true;
 	}
 	
@@ -52,26 +43,50 @@ public class Rook extends Piece {
 	     Piece possiblePiece;
 	     possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
 	     
-	    for(int i=1;i<8;i++) {
-	    	 if(possiblePiece.isPossible(getX()+i, getY(), blanche, noir)) {
-	    		 arraylist.add(getX()+i);   
-				 arraylist.add(getY()); 
-		     }
-	    	 if(possiblePiece.isPossible(getX(), getY()-i, blanche, noir)) {
-	    		 arraylist.add(getX());   
-				 arraylist.add(getY()-i); 
-		     }
-	    	 if(possiblePiece.isPossible(getX(), getY()+i, blanche, noir)) {
-	    		 arraylist.add(getX());   
-				 arraylist.add(getY()+i); 
-		     }
-	    	 if(possiblePiece.isPossible(getX()-i, getY(), blanche, noir)) {
-	    		 arraylist.add(getX()-i);   
-				 arraylist.add(getY()); 
-		     }
-	    }
-	    
+	     
+	     if(possiblePiece.isPossible(getX()+1, getY()-2, blanche, noir)) {
+	    	 arraylist.add(getX()+1);   
+			 arraylist.add(getY()-2); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()+2, getY()-1, blanche, noir)) {
+	    	 arraylist.add(getX()+2);   
+			 arraylist.add(getY()-1); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()+2, getY()+1, blanche, noir)) {
+	    	 arraylist.add(getX()+2);   
+			 arraylist.add(getY()+1); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()+1, getY()+2, blanche, noir)) {
+	    	 arraylist.add(getX()+1);   
+			 arraylist.add(getY()+2); 
+	     }
+	     //
+	     if(possiblePiece.isPossible(getX()-1, getY()+2, blanche, noir)) {
+	    	 arraylist.add(getX()-1);   
+			 arraylist.add(getY()+2); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()-2, getY()+1, blanche, noir)) {
+	    	 arraylist.add(getX()-2);   
+			 arraylist.add(getY()+1); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()-2, getY()-1, blanche, noir)) {
+	    	 arraylist.add(getX()-2);   
+			 arraylist.add(getY()-1); 
+	     }
+	     
+	     if(possiblePiece.isPossible(getX()-1, getY()-2, blanche, noir)) {
+	    	 arraylist.add(getX()-1);   
+			 arraylist.add(getY()-2); 
+	     }
+		 
+	     
 		 return arraylist; 
 	}
+	
 
 }
