@@ -38,13 +38,11 @@ public class Table extends JPanel implements ChessEventListener {
 	private final static int HEIGHT = 600;
 
 	private JButton carres[][] = new JButton[LIGNES][COLONNES];
-	//private Vector<Piece> piecesBlanche = new Vector<Piece>();
-	//private Vector<Piece> piecesNoir = new Vector<Piece>();
 	
 	private ListPieces piecesBlanche = new ListPieces();
 	private ListPieces piecesNoir = new ListPieces();
 
-	private ChessController chessController = new ChessController(piecesBlanche, piecesNoir);
+	private ChessController chessController = new ChessController(piecesBlanche, piecesNoir, carres);
 	private boolean tourBlanche = true;
 
 	public Table() {
@@ -98,10 +96,20 @@ public class Table extends JPanel implements ChessEventListener {
 			carres[oldY][oldX].setIcon(null);
 			carres[newPiece.getY()][newPiece.getX()].setIcon(deplaceIcon);
 
-			if ((oldY + oldX) % 2 != 0) {
+			/*if ((oldY + oldX) % 2 != 0) {
 				carres[oldY][oldX].setBackground(new Color(0x769656));
 			} else {
 				carres[oldY][oldX].setBackground(new Color(0xeeeed2));
+			}*/
+			
+			for (int i = 0; i < LIGNES; i++) {
+				for (int j = 0; j < COLONNES; j++) {
+					if ((i + j) % 2 != 0) {
+						carres[i][j].setBackground(new Color(0x769656));
+					} else {
+						carres[i][j].setBackground(new Color(0xeeeed2));
+					}
+				}
 			}
 			
 			if(oldY != newPiece.getY() || oldX != newPiece.getX()) {				
@@ -109,23 +117,12 @@ public class Table extends JPanel implements ChessEventListener {
 				if (tourBlanche) {
 					tourBlanche = false;
 					System.out.println("BLACK TURN");
-					for (int i = 0; i < piecesBlanche.size(); i++) {
-						int col = piecesBlanche.getPiece(i).getX();
-						int row = piecesBlanche.getPiece(i).getY();
-						carres[row][col].setEnabled(false);
-					}
 					chessController.executeOpponent();
 				} else {
 					tourBlanche = true;
 					System.out.println("WHITE TURN");
-					for (int i = 0; i < piecesBlanche.size(); i++) {
-						int col = piecesBlanche.getPiece(i).getX();
-						int row = piecesBlanche.getPiece(i).getY();
-						carres[row][col].setEnabled(true);
-					}
 				}
 			}
-			
 			System.out.println("Tableau : " + piecesNoir);
 		}
 	}
@@ -150,8 +147,8 @@ public class Table extends JPanel implements ChessEventListener {
 		piecesNoir.addPiece(new Knight(1, 0, false, "knight_black.png"));
 		piecesNoir.addPiece(new Bishop(2, 0, false, "bishop_black.png"));
 		piecesNoir.addPiece(new King(3, 0, false, "king_black.png"));
-		piecesNoir.addPiece(new Piece(4, 0, false, "queen_black.png"));
-		piecesNoir.addPiece(new Queen(5, 0, false, "bishop_black.png"));
+		piecesNoir.addPiece(new Queen(4, 0, false, "queen_black.png"));
+		piecesNoir.addPiece(new Bishop(5, 0, false, "bishop_black.png"));
 		piecesNoir.addPiece(new Knight(6, 0, false, "knight_black.png"));
 		piecesNoir.addPiece(new Rook(7, 0, false, "rook_black.png"));
 
