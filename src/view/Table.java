@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -13,6 +14,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import controller.ChessController;
 import controller.ChessEvent;
@@ -38,26 +41,22 @@ public class Table extends JPanel implements ChessEventListener {
 	private final static int HEIGHT = 600;
 
 	private JButton carres[][] = new JButton[LIGNES][COLONNES];
-	//private Vector<Piece> piecesBlanche = new Vector<Piece>();
-	//private Vector<Piece> piecesNoir = new Vector<Piece>();
-	
+	// private Vector<Piece> piecesBlanche = new Vector<Piece>();
+	// private Vector<Piece> piecesNoir = new Vector<Piece>();
+
 	private ListPieces piecesBlanche = new ListPieces();
 	private ListPieces piecesNoir = new ListPieces();
 
 	private ChessController chessController = new ChessController(piecesBlanche, piecesNoir);
-	private boolean tourBlanche = true;
 
-	public Table() {
+	private TimerThread timerBlanche;
+	private TimerThread timerNoir;
+
+	public Table(TimerThread timerBlanche, TimerThread timerNoir) {
+		this.timerBlanche = timerBlanche;
+		this.timerNoir = timerNoir;
 		// TODO Auto-generated constructor stub
 		setLayout(new GridLayout(LIGNES, COLONNES));
-		initTable();
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		setMaximumSize(new Dimension(WIDTH, HEIGHT));
-	}
-
-	private void initTable() {
-		initBlanche();
-		initNoir();
 		for (int i = 0; i < LIGNES; i++) {
 			for (int j = 0; j < COLONNES; j++) {
 				carres[i][j] = new JButton();
@@ -71,65 +70,69 @@ public class Table extends JPanel implements ChessEventListener {
 				carres[i][j].setFocusPainted(false);
 			}
 		}
-		initPieces();
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setMaximumSize(new Dimension(WIDTH, HEIGHT));
 	}
 
 	@Override
-	public void actionADeclancher(ChessEvent evt) {
+	public void noirListener(ChessEvent evt) {
 		// TODO Auto-generated method stub
 		if (evt.getSource() instanceof Piece) {
 			Vector<Object> donne = (Vector<Object>) evt.getDonnee();
-
 			int oldX = Integer.parseInt((String) donne.get(0));
 			int oldY = Integer.parseInt((String) donne.get(1));
 			Piece newPiece = (Piece) donne.get(2);
+
 			Image icon;
-			if (newPiece.isBlanche()) {
-				int index = piecesBlanche.indexOf(newPiece);
-				icon = new ImageIcon("images/" + piecesBlanche.getPiece(index).getIcon()).getImage().getScaledInstance(60,
-						60, Image.SCALE_SMOOTH);
-			} else {
-				int index = piecesNoir.indexOf(newPiece);
-				icon = new ImageIcon("images/" + piecesNoir.getPiece(index).getIcon()).getImage().getScaledInstance(60, 60,
-						Image.SCALE_SMOOTH);
-			}
+			int index = piecesNoir.indexOfPiece(newPiece);
+			icon = new ImageIcon("images/" + piecesNoir.getPiece(index).getIcon()).getImage().getScaledInstance(60, 60,
+					Image.SCALE_SMOOTH);
 
 			ImageIcon deplaceIcon = new ImageIcon(icon);
 			carres[oldY][oldX].setIcon(null);
 			carres[newPiece.getY()][newPiece.getX()].setIcon(deplaceIcon);
 
+			if (oldX != newPiece.getX() || oldY != newPiece.getY()) {
+				timerNoir.cancel(true);
+				timerBlanche = new TimerThread(timerBlanche.getTimerPanel());
+				timerBlanche.execute();
+			}
+			System.out.println("Tableau Noir : " + piecesNoir);
+		}
+	}
+
+	@Override
+	public void blancheListener(ChessEvent evt) {
+		// TODO Auto-generated method stub
+		if (evt.getSource() instanceof Piece) {
+			Vector<Object> donne = (Vector<Object>) evt.getDonnee();
+			int oldX = Integer.parseInt((String) donne.get(0));
+			int oldY = Integer.parseInt((String) donne.get(1));
+			Piece newPiece = (Piece) donne.get(2);
+
+			if (oldX != newPiece.getX() || oldY != newPiece.getY()) {
+				BlackWorker blackWorker = new BlackWorker(chessController, timerBlanche);
+				WhiteWorker whiteWorker = new WhiteWorker(oldX, oldY, newPiece, carres, piecesBlanche, blackWorker);
+				whiteWorker.execute();
+				timerBlanche.cancel(true);
+				timerNoir = new TimerThread(timerNoir.getTimerPanel());
+				timerNoir.execute();
+			}
 			if ((oldY + oldX) % 2 != 0) {
 				carres[oldY][oldX].setBackground(new Color(0x769656));
 			} else {
 				carres[oldY][oldX].setBackground(new Color(0xeeeed2));
 			}
-			
-			if(oldY != newPiece.getY() || oldX != newPiece.getX()) {				
-				System.out.println("A declancher");
-				if (tourBlanche) {
-					tourBlanche = false;
-					System.out.println("BLACK TURN");
-					for (int i = 0; i < piecesBlanche.size(); i++) {
-						int col = piecesBlanche.getPiece(i).getX();
-						int row = piecesBlanche.getPiece(i).getY();
-						carres[row][col].setEnabled(false);
-					}
-					chessController.executeOpponent();
-				} else {
-					tourBlanche = true;
-					System.out.println("WHITE TURN");
-					for (int i = 0; i < piecesBlanche.size(); i++) {
-						int col = piecesBlanche.getPiece(i).getX();
-						int row = piecesBlanche.getPiece(i).getY();
-						carres[row][col].setEnabled(true);
-					}
-				}
-			}
-			
-			System.out.println("Tableau : " + piecesNoir);
+			System.out.println("Tableau : " + piecesBlanche);
 		}
 	}
-	
+
+	public void initTable() {
+		initBlanche();
+		initNoir();
+		initPieces();
+	}
+
 	private void initBlanche() {
 		piecesBlanche.addPiece(new Rook(0, LIGNES - 1, true, "rook_white.png"));
 		piecesBlanche.addPiece(new Knight(1, LIGNES - 1, true, "knight_white.png"));
@@ -144,7 +147,7 @@ public class Table extends JPanel implements ChessEventListener {
 			piecesBlanche.addPiece(new Pawn(i, LIGNES - 2, true, "pawn_white.png"));
 		}
 	}
-	
+
 	private void initNoir() {
 		piecesNoir.addPiece(new Rook(0, 0, false, "rook_black.png"));
 		piecesNoir.addPiece(new Knight(1, 0, false, "knight_black.png"));
@@ -159,13 +162,13 @@ public class Table extends JPanel implements ChessEventListener {
 			piecesNoir.addPiece(new Pawn(i, 1, false, "pawn_black.png"));
 		}
 	}
-	
+
 	private void initPieces() {
 		for (int i = 0; i < piecesBlanche.size(); i++) {
 			int col = piecesBlanche.getPiece(i).getX();
 			int row = piecesBlanche.getPiece(i).getY();
-			Image icon = new ImageIcon("images/" + piecesBlanche.getPiece(i).getIcon()).getImage().getScaledInstance(60, 60,
-					Image.SCALE_SMOOTH);
+			Image icon = new ImageIcon("images/" + piecesBlanche.getPiece(i).getIcon()).getImage().getScaledInstance(60,
+					60, Image.SCALE_SMOOTH);
 			ImageIcon piece = new ImageIcon(icon);
 			carres[row][col].setIcon(piece);
 			piecesBlanche.getPiece(i).addChessEventListener(this);
@@ -174,8 +177,8 @@ public class Table extends JPanel implements ChessEventListener {
 		for (int i = 0; i < piecesNoir.size(); i++) {
 			int col = piecesNoir.getPiece(i).getX();
 			int row = piecesNoir.getPiece(i).getY();
-			Image icon = new ImageIcon("images/" + piecesNoir.getPiece(i).getIcon()).getImage().getScaledInstance(60, 60,
-					Image.SCALE_SMOOTH);
+			Image icon = new ImageIcon("images/" + piecesNoir.getPiece(i).getIcon()).getImage().getScaledInstance(60,
+					60, Image.SCALE_SMOOTH);
 			ImageIcon piece = new ImageIcon(icon);
 			carres[row][col].setIcon(piece);
 			piecesNoir.getPiece(i).addChessEventListener(this);

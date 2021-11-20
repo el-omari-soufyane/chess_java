@@ -32,7 +32,7 @@ public class ListPieces {
 		return pieces.stream().filter(p -> p.getX() == x && p.getY() == y).findFirst().orElse(null);
 	}
 	
-	public int indexOf(Piece piece) {
+	public int indexOfPiece(Piece piece) {
 		return pieces.indexOf(piece);
 	}
 }
