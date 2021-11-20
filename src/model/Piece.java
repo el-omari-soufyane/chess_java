@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import controller.ChessEvent;
@@ -83,7 +84,8 @@ public class Piece {
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
 		return numbers;
 	}
-	
+
+
 	public boolean isBlocking(int x, int y, ListPieces listBlanche, ListPieces listNoir) {
 		if(listBlanche.getPieceByXY(x, y) != null) return true;
 		if(listNoir.getPieceByXY(x, y) != null) return true;
