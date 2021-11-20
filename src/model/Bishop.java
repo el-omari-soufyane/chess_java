@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Bishop extends Piece {
@@ -11,8 +12,12 @@ public class Bishop extends Piece {
 	@Override
 	public boolean isPossible(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
 		int cpt = 0;
-		System.out.println("Dest => x : " + x_dest + " y : " + y_dest + " => OldPiece : " + this);
-		Piece possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
+		
+		Piece possiblePiece;
+		possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
+		if(possiblePiece != null) {
+		}
+		else possiblePiece = noir.getPieceByXY(x_dest, y_dest);
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
@@ -70,6 +75,35 @@ public class Bishop extends Piece {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public ArrayList<Integer> colorCase(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
+	     ArrayList arraylist = new ArrayList();
+	     Piece possiblePiece;
+	     possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
+	     
+	    for(int i=1;i<8;i++) {
+	    	 if(possiblePiece.isPossible(getX()+i, getY()-i, blanche, noir)) {
+	    		 arraylist.add(getX()+i);   
+				 arraylist.add(getY()-i); 
+		     }
+	    	 if(possiblePiece.isPossible(getX()+i, getY()+i, blanche, noir)) {
+	    		 arraylist.add(getX()+i);   
+				 arraylist.add(getY()+i); 
+		     }
+	    	 if(possiblePiece.isPossible(getX()-i, getY()-i, blanche, noir)) {
+	    		 arraylist.add(getX()-i);   
+				 arraylist.add(getY()-i); 
+		     }
+	    	 if(possiblePiece.isPossible(getX()-i, getY()+i, blanche, noir)) {
+	    		 arraylist.add(getX()-i);   
+				 arraylist.add(getY()+i); 
+		     }
+	    	 
+	    }
+	    
+		 return arraylist; 
 	}
 
 }

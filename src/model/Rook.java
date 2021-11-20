@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Rook extends Piece {
 
 	public Rook(int x, int y, boolean blanche, String icon) {
@@ -9,11 +11,12 @@ public class Rook extends Piece {
 
 	@Override
 	public boolean isPossible(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
-		// TODO Auto-generated method stub
 		
-		System.out.println("Dest => x : " + x_dest + " y : " + y_dest + " => OldPiece : " + this);
-		Piece possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
-		possiblePiece = noir.getPieceByXY(x_dest, y_dest);
+		Piece possiblePiece;
+		possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
+		if(possiblePiece != null) {
+		}
+		else possiblePiece = noir.getPieceByXY(x_dest, y_dest);
 		
 		if(possiblePiece != null) {
 			if(possiblePiece.isBlanche() && this.isBlanche()) return false;
@@ -42,4 +45,33 @@ public class Rook extends Piece {
 		}
 		return true;
 	}
+	
+	@Override
+	public ArrayList<Integer> colorCase(int x_dest, int y_dest, ListPieces blanche, ListPieces noir) {
+	     ArrayList arraylist = new ArrayList();
+	     Piece possiblePiece;
+	     possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
+	     
+	    for(int i=1;i<8;i++) {
+	    	 if(possiblePiece.isPossible(getX()+i, getY(), blanche, noir)) {
+	    		 arraylist.add(getX()+i);   
+				 arraylist.add(getY()); 
+		     }
+	    	 if(possiblePiece.isPossible(getX(), getY()-i, blanche, noir)) {
+	    		 arraylist.add(getX());   
+				 arraylist.add(getY()-i); 
+		     }
+	    	 if(possiblePiece.isPossible(getX(), getY()+i, blanche, noir)) {
+	    		 arraylist.add(getX());   
+				 arraylist.add(getY()+i); 
+		     }
+	    	 if(possiblePiece.isPossible(getX()-i, getY(), blanche, noir)) {
+	    		 arraylist.add(getX()-i);   
+				 arraylist.add(getY()); 
+		     }
+	    }
+	    
+		 return arraylist; 
+	}
+
 }
