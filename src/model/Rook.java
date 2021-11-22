@@ -52,7 +52,7 @@ public class Rook extends Piece {
 	     Piece possiblePiece;
 	     possiblePiece = blanche.getPieceByXY(x_dest, y_dest);
 	     
-	    for(int i=1;i<8;i++) {
+	     for(int i=1;i<8;i++) {
 	    	 if(possiblePiece.isPossible(getX()+i, getY(), blanche, noir)) {
 	    		 arraylist.add(getX()+i);   
 				 arraylist.add(getY()); 

@@ -27,48 +27,57 @@ public class ChessGUI extends JFrame {
 	private JPanel headerPanel = new JPanel();
 	private final JLabel headerMessage = new JLabel("Bienvenue sur i-Chess !");
 	
-	private Table tableChess = new Table();
+	private Table tableChess;
 
 	private JPanel rightPanel = new JPanel();
 	private JPanel timerPanel = new JPanel();
-	private JPanel timerBlanchePanel = new JPanel();
-	private JPanel timerNoirPanel = new JPanel();
-	private JLabel timerBlanche = new JLabel("00:00");
-	private JLabel timerNoir = new JLabel("00:00");
+	
+	private TimerPanel timerBlanche = new TimerPanel("Blanc");
+	private TimerPanel timerNoir = new TimerPanel("Noir");
 
+	private Button start = new Button("Jouer", "icons/add.png", new Color(0x26b1aa));
 	private Button saveJeu = new Button("Enregistrer", "icons/save.png", new Color(0xd47b53));
 	private Button quit = new Button("Quitter", "icons/close.png", new Color(0xff605c));
 
 	public ChessGUI() {
 		// TODO Auto-generated constructor stub
-		setLayout(new BorderLayout(15, 25));
+		TimerThread timerB = new TimerThread(timerBlanche);
+		TimerThread timerN = new TimerThread(timerNoir);
+		tableChess = new Table(timerB, timerN);
+				
+		setLayout(new BorderLayout(15, 10));
 		
 		toolbar.setLayout(new BorderLayout());
 		toolbar.setFloatable(false);
 		toolbar.setMargin(new Insets(5, 10, 5, 5));
+		start.setFont(new Font("Evil Empire", Font.PLAIN, 20));
+		saveJeu.setFont(new Font("Evil Empire", Font.PLAIN, 20));
+		quit.setFont(new Font("Evil Empire", Font.PLAIN, 20));
 		
 		headerMessage.setForeground(new Color(50,111,138));
 		headerMessage.setFont(new Font("Evil Empire", Font.PLAIN, 24));
         
         headerPanel.setLayout(new FlowLayout());
+        headerPanel.add(start);
         headerPanel.add(saveJeu);
         headerPanel.add(quit);
+        
+        start.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				tableChess.initTable();
+				timerB.execute();
+			}
+		});
         
         toolbar.add(headerMessage, BorderLayout.WEST);
         toolbar.add(headerPanel, BorderLayout.EAST);
 
-		timerBlanche.setFont(timerBlanche.getFont().deriveFont(32f));
-		timerNoir.setFont(timerNoir.getFont().deriveFont(32f));
-		timerNoirPanel.add(timerNoir);
-		timerNoirPanel.setBorder(BorderFactory.createTitledBorder("Noir"));
-		timerBlanchePanel.add(timerBlanche);
-		timerBlanchePanel.setBorder(BorderFactory.createTitledBorder("Blanc"));
-		timerBlanchePanel.setPreferredSize(new Dimension(200, 70));
-		timerNoirPanel.setPreferredSize(new Dimension(200, 70));
-
 		timerPanel.setLayout(new FlowLayout());
-		timerPanel.add(timerNoirPanel);
-		timerPanel.add(timerBlanchePanel);
+		timerPanel.add(timerBlanche);
+		timerPanel.add(timerNoir);
 		timerPanel.setPreferredSize(new Dimension(200, 200));
 
 		rightPanel.setLayout(new BorderLayout());
@@ -79,7 +88,8 @@ public class ChessGUI extends JFrame {
 		add(toolbar, BorderLayout.PAGE_START);
 		add(rightPanel, BorderLayout.EAST);
 		add(tableChess, BorderLayout.CENTER);
-
+		
+		
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

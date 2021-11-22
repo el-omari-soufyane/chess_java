@@ -40,7 +40,7 @@ public class ChessController implements ActionListener {
 		
 		if (!myTurn) {
 			boolean possiblePiece = activePiece.isPossible(clickedCol, clickedLigne, piecesBlanche, piecesNoir);
-			int position = piecesBlanche.indexOf(activePiece);
+			int position = piecesBlanche.indexOfPiece(activePiece);
 			if(possiblePiece) {
 				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
 				Piece p = piecesNoir.getPieceByXY(clickedCol, clickedLigne);
@@ -66,7 +66,6 @@ public class ChessController implements ActionListener {
 				   j = j + 2;
 			}
 			myTurn = false;
-			
 		}
 	}
 	
@@ -88,7 +87,7 @@ public class ChessController implements ActionListener {
 			}			
 			
 			Piece active = piecesNoir.getPieceByXY(randX, randY);
-			int position = piecesNoir.indexOf(active);
+			int position = piecesNoir.indexOfPiece(active);
 			
 			randX_dest = rand.nextInt(8);
 			randY_dest = rand.nextInt(7);

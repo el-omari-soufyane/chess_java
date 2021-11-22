@@ -53,7 +53,12 @@ public class Piece {
 		this.y = y_dest;
 		
 		piece.add(getXY());
-		notifieur.diffuserChessEvent(new ChessEvent(this, piece));
+		if(this.isBlanche()) {
+			notifieur.diffuserBlancheChessEvent(new ChessEvent(this, piece));
+		} else {
+			notifieur.diffuserNoirChessEvent(new ChessEvent(this, piece));
+		}
+		
 	}
 
 	public boolean isBlanche() {
@@ -73,7 +78,10 @@ public class Piece {
 	}
 	
 	public void addChessEventListener(ChessEventListener listener) {
-		notifieur.addChessEventListener(listener);
+		if(this.isBlanche()) 
+			notifieur.addChessBlancheEventListener(listener);
+		else
+			notifieur.addChessNoirEventListener(listener);
 	}
 	
 	public boolean isPossible(int x_dest, int y_dest, ListPieces piecesBlanche, ListPieces piecesNoir) {
@@ -91,6 +99,11 @@ public class Piece {
 		if(listNoir.getPieceByXY(x, y) != null) return true;
 		return false;
 	}
+	
+	/*
+	public boolean King_down() {
+		return false;
+	}*/
 
 	@Override
 	public String toString() {
