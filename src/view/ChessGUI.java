@@ -20,6 +20,13 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+
+import controller.ChessController;
+import model.ListPieces;
+import workers.InitBlackWorker;
+import workers.InitWhiteWorker;
 
 public class ChessGUI extends JFrame {
 	
@@ -38,13 +45,23 @@ public class ChessGUI extends JFrame {
 	private Button start = new Button("Jouer", "icons/add.png", new Color(0x26b1aa));
 	private Button saveJeu = new Button("Enregistrer", "icons/save.png", new Color(0xd47b53));
 	private Button quit = new Button("Quitter", "icons/close.png", new Color(0xff605c));
+	
+	private ListPieces piecesBlanche = new ListPieces();
+	private ListPieces piecesNoir = new ListPieces();
+
+	private ChessController chessController = new ChessController(piecesBlanche, piecesNoir);
 
 	public ChessGUI() {
 		// TODO Auto-generated constructor stub
-		TimerThread timerB = new TimerThread(timerBlanche);
-		TimerThread timerN = new TimerThread(timerNoir);
-		tableChess = new Table(timerB, timerN);
-				
+		TimerThread timerB = new TimerThread(timerBlanche, chessController);
+		TimerThread timerN = new TimerThread(timerNoir, chessController);
+		tableChess = new Table(chessController, piecesBlanche, piecesNoir, timerB, timerN);
+		
+		InitWhiteWorker blancheWorker = new InitWhiteWorker(chessController);
+		InitBlackWorker noirWorker = new InitBlackWorker(chessController);
+		blancheWorker.execute();
+		noirWorker.execute();
+						
 		setLayout(new BorderLayout(15, 10));
 		
 		toolbar.setLayout(new BorderLayout());

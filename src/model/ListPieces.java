@@ -32,6 +32,13 @@ public class ListPieces {
 		return pieces.stream().filter(p -> p.getX() == x && p.getY() == y).findFirst().orElse(null);
 	}
 	
+	public void setPieceType(Piece p, String type) {
+		if(type == "bishop") {
+			int index = indexOfPiece(p);
+			pieces.setElementAt(new Bishop(p.getX(), p.getY(), false, "bishop_white.png"), index);
+		}
+	}
+	
 	public int indexOfPiece(Piece piece) {
 		return pieces.indexOf(piece);
 	}

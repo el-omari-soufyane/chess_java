@@ -3,13 +3,17 @@ package view;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import controller.ChessController;
+
 public class TimerThread extends SwingWorker<Integer, Void> {
 
 	private TimerPanel time;
+	private ChessController chessController;
 
-	public TimerThread(TimerPanel time) {
+	public TimerThread(TimerPanel time, ChessController chessController) {
 		// TODO Auto-generated constructor stub
 		this.time = time;
+		this.chessController = chessController;
 	}
 
 	@Override
@@ -17,7 +21,6 @@ public class TimerThread extends SwingWorker<Integer, Void> {
 		// TODO Auto-generated method stub
 		time.switchTour();
 		for (int i = 0; i < 50 && !isCancelled(); i++) {
-			final int niveau = i;
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					time.setTimer();

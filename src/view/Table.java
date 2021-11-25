@@ -28,6 +28,8 @@ import model.Pawn;
 import model.Piece;
 import model.Queen;
 import model.Rook;
+import workers.InitBlackWorker;
+import workers.InitWhiteWorker;
 
 public class Table extends JPanel implements ChessEventListener {
 
@@ -42,18 +44,24 @@ public class Table extends JPanel implements ChessEventListener {
 
 	private JButton carres[][] = new JButton[LIGNES][COLONNES];
 
-	private ListPieces piecesBlanche = new ListPieces();
-	private ListPieces piecesNoir = new ListPieces();
-
-	private ChessController chessController = new ChessController(piecesBlanche, piecesNoir, carres);
-
 	private TimerThread timerBlanche;
 	private TimerThread timerNoir;
+	
+	private ListPieces piecesBlanche;
+	private ListPieces piecesNoir;
 
-	public Table(TimerThread timerBlanche, TimerThread timerNoir) {
+	private ChessController chessController;
+
+	public Table(ChessController chessController, ListPieces piecesBlanche, ListPieces piecesNoir,
+			TimerThread timerBlanche, TimerThread timerNoir) {
 		this.timerBlanche = timerBlanche;
 		this.timerNoir = timerNoir;
-		// TODO Auto-generated constructor stub
+		
+		this.chessController = chessController;
+		this.piecesBlanche = piecesBlanche;
+		this.piecesNoir = piecesNoir;
+		this.chessController.setButtons(carres);
+		
 		setLayout(new GridLayout(LIGNES, COLONNES));
 		for (int i = 0; i < LIGNES; i++) {
 			for (int j = 0; j < COLONNES; j++) {
@@ -92,10 +100,11 @@ public class Table extends JPanel implements ChessEventListener {
 
 			if (oldX != newPiece.getX() || oldY != newPiece.getY()) {
 				timerNoir.cancel(true);
-				timerBlanche = new TimerThread(timerBlanche.getTimerPanel());
+				chessController.setComputerTurn(false);
+				timerBlanche = new TimerThread(timerBlanche.getTimerPanel(), chessController);
 				timerBlanche.execute();
 			}
-			System.out.println("Tableau Noir : " + piecesNoir);
+			System.out.println("Tableau Noir : " + piecesNoir.size());
 		}
 	}
 
@@ -113,19 +122,14 @@ public class Table extends JPanel implements ChessEventListener {
 				WhiteWorker whiteWorker = new WhiteWorker(oldX, oldY, newPiece, carres, piecesBlanche, blackWorker);
 				whiteWorker.execute();
 				timerBlanche.cancel(true);
-				timerNoir = new TimerThread(timerNoir.getTimerPanel());
+				chessController.setComputerTurn(true);
+				timerNoir = new TimerThread(timerNoir.getTimerPanel(), chessController);
 				timerNoir.execute();
 			}
 			/*
-			 * if(king_down()){
-			 * 	  System.out.println("le roi est mort fin de la partie");
-			 * };
+			 * if(king_down()){ System.out.println("le roi est mort fin de la partie"); };
 			 * 
-			 * public boolean king_dow(){
-			 * 		if(getX){
-			 *      	return true;
-			 *      }
-			 * }
+			 * public boolean king_dow(){ if(getX){ return true; } }
 			 */
 			for (int i = 0; i < LIGNES; i++) {
 				for (int j = 0; j < COLONNES; j++) {
@@ -136,64 +140,20 @@ public class Table extends JPanel implements ChessEventListener {
 					}
 				}
 			}
-			System.out.println("Tableau : " + piecesBlanche);
+			System.out.println("Tableau Blanche : " + piecesBlanche.size());
 		}
 	}
 
 	public void initTable() {
-		initBlanche();
-		initNoir();
 		initPieces();
-	}
-
-	private void initBlanche() {
-		piecesBlanche.addPiece(new Rook(0, LIGNES - 1, true, "rook_white.png"));
-		piecesBlanche.addPiece(new Knight(1, LIGNES - 1, true, "knight_white.png"));
-		piecesBlanche.addPiece(new Bishop(2, LIGNES - 1, true, "bishop_white.png"));
-		piecesBlanche.addPiece(new King(3, LIGNES - 1, true, "king_white.png"));
-		piecesBlanche.addPiece(new Queen(4, LIGNES - 1, true, "queen_white.png"));
-		piecesBlanche.addPiece(new Bishop(5, LIGNES - 1, true, "bishop_white.png"));
-		piecesBlanche.addPiece(new Knight(6, LIGNES - 1, true, "knight_white.png"));
-		piecesBlanche.addPiece(new Rook(7, LIGNES - 1, true, "rook_white.png"));
-
-		for (int i = 0; i < COLONNES; i++) {
-			piecesBlanche.addPiece(new Pawn(i, LIGNES - 2, true, "pawn_white.png"));
-		}
-	}
-
-	private void initNoir() {
-		piecesNoir.addPiece(new Rook(0, 0, false, "rook_black.png"));
-		piecesNoir.addPiece(new Knight(1, 0, false, "knight_black.png"));
-		piecesNoir.addPiece(new Bishop(2, 0, false, "bishop_black.png"));
-		piecesNoir.addPiece(new King(3, 0, false, "king_black.png"));
-		piecesNoir.addPiece(new Queen(4, 0, false, "queen_black.png"));
-		piecesNoir.addPiece(new Bishop(5, 0, false, "bishop_black.png"));
-		piecesNoir.addPiece(new Knight(6, 0, false, "knight_black.png"));
-		piecesNoir.addPiece(new Rook(7, 0, false, "rook_black.png"));
-
-		for (int i = 0; i < COLONNES; i++) {
-			piecesNoir.addPiece(new Pawn(i, 1, false, "pawn_black.png"));
-		}
 	}
 
 	private void initPieces() {
 		for (int i = 0; i < piecesBlanche.size(); i++) {
-			int col = piecesBlanche.getPiece(i).getX();
-			int row = piecesBlanche.getPiece(i).getY();
-			Image icon = new ImageIcon("images/" + piecesBlanche.getPiece(i).getIcon()).getImage().getScaledInstance(60,
-					60, Image.SCALE_SMOOTH);
-			ImageIcon piece = new ImageIcon(icon);
-			carres[row][col].setIcon(piece);
 			piecesBlanche.getPiece(i).addChessEventListener(this);
 		}
 
 		for (int i = 0; i < piecesNoir.size(); i++) {
-			int col = piecesNoir.getPiece(i).getX();
-			int row = piecesNoir.getPiece(i).getY();
-			Image icon = new ImageIcon("images/" + piecesNoir.getPiece(i).getIcon()).getImage().getScaledInstance(60,
-					60, Image.SCALE_SMOOTH);
-			ImageIcon piece = new ImageIcon(icon);
-			carres[row][col].setIcon(piece);
 			piecesNoir.getPiece(i).addChessEventListener(this);
 		}
 	}

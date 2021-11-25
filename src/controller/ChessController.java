@@ -1,35 +1,51 @@
 package controller;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import model.Bishop;
+import model.King;
+import model.Knight;
 import model.ListPieces;
+import model.Pawn;
 import model.Piece;
+import model.Queen;
+import model.Rook;
+import view.ChangePiece;
 
 public class ChessController implements ActionListener {
 
+	private final static int LIGNES = 7;
+	private final static int COLONNES = 8;
+	
 	private ListPieces piecesBlanche;
 	private ListPieces piecesNoir;
 	private JButton carres[][];
 	private Piece activePiece = null;
 	private boolean myTurn = true;
-
-	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir, JButton carres[][]) {
+	private boolean computerTurn = false;
+	
+	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir) {
 		// TODO Auto-generated constructor stub
 		this.piecesBlanche = piecesBlanche;
 		this.piecesNoir = piecesNoir;
+	}
+	
+	public void setButtons(JButton[][] carres) {
 		this.carres = carres;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(computerTurn) return;
 		JButton click = (JButton) e.getSource();
 		int clickedLigne = click.getY() / click.getSize().height;
 		int clickedCol = click.getX() / click.getSize().width;
@@ -42,13 +58,26 @@ public class ChessController implements ActionListener {
 			boolean possiblePiece = activePiece.isPossible(clickedCol, clickedLigne, piecesBlanche, piecesNoir);
 			int position = piecesBlanche.indexOfPiece(activePiece);
 			if(possiblePiece) {
+				if(clickedLigne == 0 && activePiece instanceof Pawn) {
+					new ChangePiece(activePiece, this);
+					while(piecesBlanche.getPiece(position) instanceof Pawn);
+					System.out.println(piecesBlanche.getPiece(position).getClass());
+				}
 				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
 				Piece p = piecesNoir.getPieceByXY(clickedCol, clickedLigne);
 				if(p != null) {
 					piecesNoir.removePiece(p);
 				}
 			}
-			else piecesBlanche.getPiece(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
+			else {
+				if(clickedLigne == 0 && activePiece instanceof Pawn) {
+					new ChangePiece(activePiece, this);
+					while(piecesBlanche.getPiece(position) instanceof Pawn);
+					System.out.println(piecesBlanche.getPiece(position).getClass());
+				}
+				piecesBlanche.getPiece(position).setXY(activePiece.getX(), activePiece.getY(), activePiece);
+			}
+			
 			myTurn = true;
 			activePiece = null;
 		} else {
@@ -97,8 +126,63 @@ public class ChessController implements ActionListener {
 			}
 			
 			legalMove = true;			
-			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);	
+			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);
+			Piece p = piecesBlanche.getPieceByXY(randX_dest, randY_dest);
+			if(p != null) {
+				piecesBlanche.removePiece(p);
+			}
+		}
+	}
+	
+	public void changePiece(Piece p, String newType) {
+		piecesBlanche.setPieceType(p, newType);
+	}
+	
+	public void initBlanche() {
+		piecesBlanche.addPiece(new Rook(0, LIGNES - 1, true, "rook_white.png"));
+		piecesBlanche.addPiece(new Knight(1, LIGNES - 1, true, "knight_white.png"));
+		piecesBlanche.addPiece(new Bishop(2, LIGNES - 1, true, "bishop_white.png"));
+		piecesBlanche.addPiece(new King(3, LIGNES - 1, true, "king_white.png"));
+		piecesBlanche.addPiece(new Queen(4, LIGNES - 1, true, "queen_white.png"));
+		piecesBlanche.addPiece(new Bishop(5, LIGNES - 1, true, "bishop_white.png"));
+		piecesBlanche.addPiece(new Knight(6, LIGNES - 1, true, "knight_white.png"));
+		piecesBlanche.addPiece(new Rook(7, LIGNES - 1, true, "rook_white.png"));
+
+		for (int i = 0; i < COLONNES; i++) {
+			piecesBlanche.addPiece(new Pawn(i, LIGNES - 2, true, "pawn_white.png"));
+		}
 		
+		for(int i=0; i < piecesBlanche.size(); i++) {
+			int col = piecesBlanche.getPiece(i).getX();
+			int row = piecesBlanche.getPiece(i).getY();
+			Image icon = new ImageIcon("images/" + piecesBlanche.getPiece(i).getIcon()).getImage().getScaledInstance(60,
+					60, Image.SCALE_SMOOTH);
+			ImageIcon piece = new ImageIcon(icon);
+			carres[row][col].setIcon(piece);
+		}
+	}
+
+	public void initNoir() {
+		piecesNoir.addPiece(new Rook(0, 0, false, "rook_black.png"));
+		piecesNoir.addPiece(new Knight(1, 0, false, "knight_black.png"));
+		piecesNoir.addPiece(new Bishop(2, 0, false, "bishop_black.png"));
+		piecesNoir.addPiece(new King(3, 0, false, "king_black.png"));
+		piecesNoir.addPiece(new Queen(4, 0, false, "queen_black.png"));
+		piecesNoir.addPiece(new Bishop(5, 0, false, "bishop_black.png"));
+		piecesNoir.addPiece(new Knight(6, 0, false, "knight_black.png"));
+		piecesNoir.addPiece(new Rook(7, 0, false, "rook_black.png"));
+
+		for (int i = 0; i < COLONNES; i++) {
+			piecesNoir.addPiece(new Pawn(i, 1, false, "pawn_black.png"));
+		}
+		
+		for(int i=0; i < piecesNoir.size(); i++) {
+			int col = piecesNoir.getPiece(i).getX();
+			int row = piecesNoir.getPiece(i).getY();
+			Image icon = new ImageIcon("images/" + piecesNoir.getPiece(i).getIcon()).getImage().getScaledInstance(60,
+					60, Image.SCALE_SMOOTH);
+			ImageIcon piece = new ImageIcon(icon);
+			carres[row][col].setIcon(piece);
 		}
 	}
 	
@@ -113,5 +197,15 @@ public class ChessController implements ActionListener {
 			return true;
 		return false;
 	}
+
+	public boolean isComputerTurn() {
+		return computerTurn;
+	}
+
+	public void setComputerTurn(boolean computerTurn) {
+		this.computerTurn = computerTurn;
+	}
+	
+	
 
 }
