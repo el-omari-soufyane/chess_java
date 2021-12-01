@@ -18,10 +18,9 @@ public class TimerPanel extends JPanel {
 	private JPanel panelTime = new JPanel();
 	private JLabel timerLabel = new JLabel();
 	private JPanel tourPlayer = new JPanel();
-	private final int maxTime = 120;
+	private final int maxTime = 20;
 	private int count = 0;
 	private boolean tourVisibility = false;
-	private boolean timeIsUp = false;
 	
 	public TimerPanel(String timerName) {
 		// TODO Auto-generated constructor stub
@@ -57,7 +56,6 @@ public class TimerPanel extends JPanel {
 	
 	public void timerEnded() {
 		timerLabel.setForeground(Color.RED);
-		this.timeIsUp = true;
 	}
 	
 	public void resetTimer() {
@@ -68,6 +66,7 @@ public class TimerPanel extends JPanel {
 		if(timeInSeconds < 10)
 			timeSeconds = "0" + timeSeconds;
 		timerLabel.setText("0" + timeInMinutes + ":" + timeSeconds);
+		timerLabel.setForeground(Color.BLACK);
 	}
 	
 	public void switchTour() {
@@ -80,7 +79,7 @@ public class TimerPanel extends JPanel {
 		}
 	}
 	
-	public boolean isTimeIsUp() {
-		return this.timeIsUp;
+	public int getMaxTime() {
+		return this.maxTime;
 	}
 }

@@ -1,9 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class ListPieces {
+public class ListPieces implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Vector<Piece> pieces = new Vector<Piece>();
 	private int size = 0;
 	
@@ -18,6 +23,10 @@ public class ListPieces {
 	public void removePiece(Piece piece) {
 		pieces.removeElement(piece);
 		size = pieces.size();
+	}
+	
+	public void removeAllPiece() {
+		pieces.removeAll(pieces);
 	}
 	
 	public Vector<Piece> getPieces() {
@@ -42,4 +51,12 @@ public class ListPieces {
 	public int indexOfPiece(Piece piece) {
 		return pieces.indexOf(piece);
 	}
+	@Override
+	public String toString() {
+		for(Piece p : pieces) {
+			System.out.println(p);
+		}
+		return "Listes";
+	}
+	
 }

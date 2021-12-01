@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -7,12 +8,16 @@ import controller.ChessEvent;
 import controller.ChessEventListener;
 import controller.ChessEventNotifieur;
 
-public class Piece {
+public class Piece implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int x;
 	private int y;
 	private boolean blanche;
 	private String icon;
-	private ChessEventNotifieur notifieur = new ChessEventNotifieur();
+	private transient ChessEventNotifieur notifieur = new ChessEventNotifieur();
 	
 	public Piece(int x, int y, boolean blanche, String icon) {
 		// TODO Auto-generated constructor stub

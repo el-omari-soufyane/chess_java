@@ -8,6 +8,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -16,26 +19,30 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import model.ListPieces;
 
 public class ChessLaunch extends JFrame {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel bannerPanel = new JPanel();
 	private JLabel bannerLabel = new JLabel("Bienvenue sur i-Chess !");
-	
+
 	private JPanel buttonsPanel = new JPanel();
 	private JPanel nvChessPanel = new JPanel();
 	private JPanel loadChessPanel = new JPanel();
-	
+
 	private Button start = new Button("Nouvelle partie", "icons/add.png", new Color(0x26b1aa));
 	private Button upload = new Button("Continuer une partie", "/icons/upload-file.png", new Color(0xd67c54));
-	
+
 	private JFileChooser loadChess = new JFileChooser();
-	
+	private ListPieces uploadedListeBlanche, uploadedListeNoir;
+
 	public ChessLaunch() {
 		super("i-Chess");
 		createBannerPanel();
@@ -43,39 +50,40 @@ public class ChessLaunch extends JFrame {
 		setLayout(new BorderLayout());
 		add(bannerPanel, BorderLayout.NORTH);
 		add(buttonsPanel, BorderLayout.SOUTH);
-		
+
 		pack();
-        setVisible(true);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-	
+
 	private void createBannerPanel() {
-		Image banner = new ImageIcon("images/icons/banner.png").getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+		Image banner = new ImageIcon("images/icons/banner.png").getImage().getScaledInstance(250, 250,
+				Image.SCALE_SMOOTH);
 		bannerLabel.setIcon(new ImageIcon(banner));
 		bannerLabel.setFont(new Font("Evil Empire", Font.PLAIN, 30));
-        bannerPanel.add(bannerLabel);
-        bannerPanel.setPreferredSize(new Dimension(600, 250));
-        bannerPanel.setBackground(new Color(210, 210, 210));
+		bannerPanel.add(bannerLabel);
+		bannerPanel.setPreferredSize(new Dimension(600, 250));
+		bannerPanel.setBackground(new Color(210, 210, 210));
 	}
-	
+
 	private void createButtonsPanel() {
 		nvChessPanel.setLayout(new GridLayout(1, 1));
 		nvChessPanel.setBorder(BorderFactory.createEmptyBorder(45, 50, 45, 25));
 		nvChessPanel.add(start);
-		
+
 		loadChessPanel.setLayout(new GridLayout(1, 1));
 		loadChessPanel.setBorder(BorderFactory.createEmptyBorder(45, 50, 45, 25));
 		loadChessPanel.add(upload);
-		
+
 		buttonsPanel.setLayout(new GridLayout(1, 2));
 		buttonsPanel.setPreferredSize(new Dimension(600, 150));
-        buttonsPanel.add(nvChessPanel);
-        buttonsPanel.add(loadChessPanel);
-        
-        start.addActionListener(new ActionListener() {
-			
+		buttonsPanel.add(nvChessPanel);
+		buttonsPanel.add(loadChessPanel);
+
+		start.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -83,12 +91,40 @@ public class ChessLaunch extends JFrame {
 					@Override
 					public void run() {
 						long start = System.currentTimeMillis();
-						new ChessGUI();			
+						new ChessGUI(null, null);
 						long end = System.currentTimeMillis();
-						System.out.println("Estimated time : " + (end - start) );
+						System.out.println("Estimated time : " + (end - start));
 					}
 				});
 				dispose();
+			}
+		});
+
+		upload.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int rVal = loadChess.showOpenDialog(ChessLaunch.this);
+				loadChess.setFileFilter(new FileNameExtensionFilter("i-Chess file", "ichess"));
+				if (rVal == JFileChooser.APPROVE_OPTION) {
+					try {
+						FileInputStream file = new FileInputStream(loadChess.getSelectedFile());
+						ObjectInputStream obj = new ObjectInputStream(file);
+						uploadedListeBlanche = (ListPieces) obj.readObject();
+						uploadedListeNoir = (ListPieces) obj.readObject();
+						obj.close();
+						file.close();
+						new ChessGUI(uploadedListeBlanche, uploadedListeNoir);
+					} catch (IOException | ClassNotFoundException cnfe) {
+						// TODO Auto-generated catch block
+						cnfe.printStackTrace();
+					}
+					uploadedListeBlanche.toString();
+				}
+				if (rVal == JFileChooser.CANCEL_OPTION) {
+					System.out.println("CANCELED");
+				}
 			}
 		});
 	}

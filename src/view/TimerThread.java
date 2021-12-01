@@ -9,18 +9,20 @@ public class TimerThread extends SwingWorker<Integer, Void> {
 
 	private TimerPanel time;
 	private ChessController chessController;
+	private int maxTime;
 
 	public TimerThread(TimerPanel time, ChessController chessController) {
 		// TODO Auto-generated constructor stub
 		this.time = time;
 		this.chessController = chessController;
+		this.maxTime = this.time.getMaxTime();
 	}
 
 	@Override
 	protected Integer doInBackground() throws Exception {
 		// TODO Auto-generated method stub
 		time.switchTour();
-		for (int i = 0; i < 50 && !isCancelled(); i++) {
+		for (int i = 0; i < this.maxTime && !isCancelled(); i++) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					time.setTimer();
@@ -44,7 +46,8 @@ public class TimerThread extends SwingWorker<Integer, Void> {
 			time.resetTimer();
 			time.switchTour();
 		} else {
-			time.timerEnded();			
+			time.timerEnded();
+			new GameOver(chessController, time);
 		}
 	}
 }
