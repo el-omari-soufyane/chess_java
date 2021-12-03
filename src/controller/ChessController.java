@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
 import model.Bishop;
 import model.King;
@@ -27,6 +29,7 @@ public class ChessController implements ActionListener {
 	private final static int LIGNES = 7;
 	private final static int COLONNES = 8;
 
+	private JFrame frame;
 	private ListPieces piecesBlanche;
 	private ListPieces piecesNoir;
 	private JButton carres[][];
@@ -34,10 +37,11 @@ public class ChessController implements ActionListener {
 	private boolean myTurn = true;
 	private boolean computerTurn = false;
 
-	public ChessController(ListPieces piecesBlanche, ListPieces piecesNoir) {
+	public ChessController(JFrame frame, ListPieces piecesBlanche, ListPieces piecesNoir) {
 		// TODO Auto-generated constructor stub
 		this.piecesBlanche = piecesBlanche;
 		this.piecesNoir = piecesNoir;
+		this.frame = frame;
 	}
 
 	public void setButtons(JButton[][] carres) {
@@ -63,18 +67,14 @@ public class ChessController implements ActionListener {
 			if (possiblePiece) {
 				if (clickedLigne == 0 && activePiece instanceof Pawn) {
 					new ChangePiece(activePiece, this);
-					while (piecesBlanche.getPiece(position) instanceof Pawn)
-						;
 					System.out.println(piecesBlanche.getPiece(position).getClass());
 				}
-				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
 				Piece p = piecesNoir.getPieceByXY(clickedCol, clickedLigne);
 				if (p != null) {
 					piecesNoir.removePiece(p);
-					if(p instanceof King) {
-						new KingDied(p, this);
-					}
 				}
+				piecesBlanche.getPiece(position).setXY(clickedCol, clickedLigne, activePiece);
+				System.out.println("SET IT");
 			} else {
 				if (clickedLigne == 0 && activePiece instanceof Pawn) {
 					new ChangePiece(activePiece, this);
@@ -133,19 +133,30 @@ public class ChessController implements ActionListener {
 			}
 
 			legalMove = true;
-			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);
 			Piece p = piecesBlanche.getPieceByXY(randX_dest, randY_dest);
 			if (p != null) {
 				piecesBlanche.removePiece(p);
-				if(p instanceof King) {
-					new KingDied(p, this);
-				}
 			}
+			piecesNoir.getPiece(position).setXY(randX_dest, randY_dest, active);
 		}
 	}
 
 	public void changePiece(Piece p, String newType) {
-		piecesBlanche.setPieceType(p, newType);
+		switch (newType) {
+			case "Bishop":
+				activePiece = new Bishop(p.getX(), p.getY(), true, "bishop_white.png");
+				break;
+			case "Knight":
+				activePiece = new Knight(p.getX(), p.getY(), true, "knight_white.png");
+				break;
+			case "Queen":
+				activePiece = new Queen(p.getX(), p.getY(), true, "queen_white.png");
+				break;
+			case "Rook":
+				activePiece = new Rook(p.getX(), p.getY(), true, "rook_white.png");
+				break;
+		}
+		System.out.println("CHANGED IT");
 	}
 
 	public void initBlanche() {
@@ -201,14 +212,8 @@ public class ChessController implements ActionListener {
 		}
 	}
 
-	public void clearPieces() {
-		piecesBlanche.removeAllPiece();
-		piecesNoir.removeAllPiece();
-		for (int i = 0; i < LIGNES; i++) {
-			for (int j = 0; j < COLONNES; j++) {
-				carres[i][j].setIcon(null);
-			}
-		}
+	public void close() {
+		frame.dispose();
 	}
 
 	private boolean clickOnWhite(int x, int y) {

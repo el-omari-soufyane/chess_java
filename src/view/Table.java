@@ -97,14 +97,19 @@ public class Table extends JPanel implements ChessEventListener {
 			ImageIcon deplaceIcon = new ImageIcon(icon);
 			carres[oldY][oldX].setIcon(null);
 			carres[newPiece.getY()][newPiece.getX()].setIcon(deplaceIcon);
-
+			
+			if(!this.piecesBlanche.findKing()) {
+				timerNoir.cancel(true);
+				new KingDied(new King(0, 0, true, null), chessController);
+				return;
+			}
+			
 			if (oldX != newPiece.getX() || oldY != newPiece.getY()) {
 				timerNoir.cancel(true);
 				chessController.setComputerTurn(false);
 				timerBlanche = new TimerThread(timerBlanche.getTimerPanel(), chessController);
 				timerBlanche.execute();
 			}
-			System.out.println("Tableau Noir : " + piecesNoir.size());
 		}
 	}
 
@@ -116,6 +121,12 @@ public class Table extends JPanel implements ChessEventListener {
 			int oldX = Integer.parseInt((String) donne.get(0));
 			int oldY = Integer.parseInt((String) donne.get(1));
 			Piece newPiece = (Piece) donne.get(2);
+			
+			if(!this.piecesNoir.findKing()) {
+				timerBlanche.cancel(true);
+				new KingDied(new King(0, 0, false, null), chessController);
+				return;
+			}
 
 			if (oldX != newPiece.getX() || oldY != newPiece.getY()) {
 				BlackWorker blackWorker = new BlackWorker(chessController, timerBlanche);
@@ -126,11 +137,6 @@ public class Table extends JPanel implements ChessEventListener {
 				timerNoir = new TimerThread(timerNoir.getTimerPanel(), chessController);
 				timerNoir.execute();
 			}
-			/*
-			 * if(king_down()){ System.out.println("le roi est mort fin de la partie"); };
-			 * 
-			 * public boolean king_dow(){ if(getX){ return true; } }
-			 */
 			for (int i = 0; i < LIGNES; i++) {
 				for (int j = 0; j < COLONNES; j++) {
 					if ((i + j) % 2 != 0) {

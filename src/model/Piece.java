@@ -104,11 +104,6 @@ public class Piece implements Serializable {
 		if(listNoir.getPieceByXY(x, y) != null) return true;
 		return false;
 	}
-	
-	/*
-	public boolean King_down() {
-		return false;
-	}*/
 
 	@Override
 	public String toString() {

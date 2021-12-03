@@ -59,18 +59,20 @@ public class ChessGUI extends JFrame {
 
 	private ChessController chessController;
 
-	private TimerThread timerB = new TimerThread(timerBlanche, chessController);
-	private TimerThread timerN = new TimerThread(timerNoir, chessController);
+	private TimerThread timerB;
+	private TimerThread timerN;
 
 	public ChessGUI(ListPieces blanche, ListPieces noir) {
 		// TODO Auto-generated constructor stub
-		if(blanche != null && noir != null) {
+		if (blanche != null && noir != null) {
 			this.piecesBlanche = blanche;
 			this.piecesNoir = noir;
 			System.out.println("Blanche Size GUI : " + piecesBlanche.size());
 		}
-		
-		chessController = new ChessController(piecesBlanche, piecesNoir);
+
+		chessController = new ChessController(this, piecesBlanche, piecesNoir);
+		timerN = new TimerThread(timerNoir, chessController);
+		timerB = new TimerThread(timerBlanche, chessController);
 		tableChess = new Table(chessController, piecesBlanche, piecesNoir, timerB, timerN);
 
 		InitWhiteWorker blancheWorker = new InitWhiteWorker(chessController);
@@ -94,6 +96,8 @@ public class ChessGUI extends JFrame {
 		headerPanel.add(start);
 		headerPanel.add(saveJeu);
 		headerPanel.add(quit);
+		
+		saveGame.setFileFilter(new FileNameExtensionFilter("i-Chess file", "ichess"));
 
 		start.addActionListener(new ActionListener() {
 
@@ -111,10 +115,13 @@ public class ChessGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				int rVal = saveGame.showSaveDialog(ChessGUI.this);
-				saveGame.setSelectedFile(new File(saveGame.getCurrentDirectory() + "\\" + "save.ichess"));
-				saveGame.setFileFilter(new FileNameExtensionFilter("i-Chess file", "ichess"));
 				if (rVal == JFileChooser.APPROVE_OPTION) {
-					File fileChess = saveGame.getSelectedFile();
+					File fileChess;
+					if(saveGame.getSelectedFile().getAbsolutePath().contains(".ichess")) {
+						fileChess = new File(saveGame.getSelectedFile().getAbsolutePath());
+					} else {
+						fileChess = new File(saveGame.getSelectedFile().getAbsolutePath() + ".ichess");
+					}
 					System.out.println(fileChess.getAbsolutePath());
 					try {
 						FileOutputStream file = new FileOutputStream(fileChess);

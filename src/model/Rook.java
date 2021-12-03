@@ -6,7 +6,6 @@ public class Rook extends Piece {
 
 	public Rook(int x, int y, boolean blanche, String icon) {
 		super(x, y, blanche, icon);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

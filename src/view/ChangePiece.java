@@ -43,16 +43,6 @@ public class ChangePiece extends JOptionPane {
 		rookImg.setIcon(new ImageIcon(
 				new ImageIcon("images/rook_white.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
 		rookImg.setBackground(new Color(0xeeeed2));
-		
-		bishopImg.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				chessController.changePiece(piece, "bishop");
-				setVisible(false);
-			}
-		});
 
 		panel.add(bishopImg);
 		panel.add(knightImg);
@@ -60,9 +50,25 @@ public class ChangePiece extends JOptionPane {
 		panel.add(rookImg);
 		
 		panel.setPreferredSize(new Dimension(400, 100));
-
-		JOptionPane.showOptionDialog(null, panel, "Choose", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, new Object[] {}, bishopImg);
 		
+		String[] pieces = {"Fou", "Cavalier", "Dame", "Tour"};
+
+		int result = JOptionPane.showOptionDialog(null, panel, "Choisir une piece", 0, 0,
+				null, pieces , pieces[0]);
+		
+		switch (result) {
+		case 0:
+			chessController.changePiece(piece, "Bishop");
+			break;
+		case 1:
+			chessController.changePiece(piece, "Knight");
+			break;
+		case 2:
+			chessController.changePiece(piece, "Queen");
+			break;
+		case 3:
+			chessController.changePiece(piece, "Rook");
+			break;
+		}
 	}
 }

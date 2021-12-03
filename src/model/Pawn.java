@@ -6,7 +6,6 @@ public class Pawn extends Piece {
 
 	public Pawn(int x, int y, boolean blanche, String icon) {
 		super(x, y, blanche, icon);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

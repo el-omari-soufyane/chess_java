@@ -6,7 +6,6 @@ public class Queen extends Piece {
 
 	public Queen(int x, int y, boolean blanche, String icon) {
 		super(x, y, blanche, icon);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
